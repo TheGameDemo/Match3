@@ -8,6 +8,10 @@ public class Game : MonoBehaviour
     [SerializeField]
     Match3Skin match3;
 
+    Vector3 dragStart;
+
+    bool isDragging;
+
     void Awake() => match3.StartNewGame();
 
     void Update()
@@ -26,5 +30,20 @@ public class Game : MonoBehaviour
         }
     }
 
-    void HandleInput() { }
+    void HandleInput()
+    {
+        if (!isDragging && Input.GetMouseButtonDown(0))
+        {
+            dragStart = Input.mousePosition;
+            isDragging = true;
+        }
+        else if (!isDragging && Input.GetMouseButton(0))
+        {
+            isDragging = match3.EvaluateDrag(dragStart, Input.mousePosition);
+        }
+        else
+        {
+            isDragging = false;
+        }
+    }
 }

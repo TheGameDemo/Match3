@@ -27,4 +27,9 @@ public class Match3Skin : MonoBehaviour
     {
 
     }
+
+    public bool EvaluateDrag(Vector3 start, Vector3 end)
+    {
+        return false;
+    }
 }
