@@ -6,6 +6,12 @@ using Random = UnityEngine.Random;
 
 using static Unity.Mathematics.math;
 
+public enum MoveDirection
+{
+    None, Up, Right, Down, Left
+}
+
+
 public class Match3Game : MonoBehaviour
 {
     [SerializeField]
@@ -74,5 +80,11 @@ public class Match3Game : MonoBehaviour
                 grid[x, y] = t;
             }
         }
+    }
+
+    public bool TryMove(Move move)
+    {
+        grid.Swap(move.From, move.To);
+        return true;
     }
 }

@@ -637,6 +637,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c91be19527e70b428121bc8988ac46b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dragThreshold: 1
   game: {fileID: 2019998061}
   tilePrefabs:
   - {fileID: 3822119248510773874, guid: 85d9563cc9913334b8b2c5bdeb07f93c, type: 3}

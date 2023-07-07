@@ -14,6 +14,9 @@ using static Unity.Mathematics.math;
 /// </summary>
 public class Match3Skin : MonoBehaviour
 {
+    [SerializeField, Range(0.1f, 1f)]
+    float dragThreshold = 0.5f;
+
     [SerializeField]
     Match3Game game;
 
@@ -68,6 +71,47 @@ public class Match3Skin : MonoBehaviour
 
     public bool EvaluateDrag(Vector3 start, Vector3 end)
     {
-        return false;
+        float2 a = ScreenToTileSpace(start), b = ScreenToTileSpace(end);
+        var move = new Move(
+            (int2)floor(a), (b - a) switch
+            {
+                var d when d.x > dragThreshold => MoveDirection.Right,
+                var d when d.x < -dragThreshold => MoveDirection.Left,
+                var d when d.y > dragThreshold => MoveDirection.Up,
+                var d when d.y < -dragThreshold => MoveDirection.Down,
+                _ => MoveDirection.None
+            }
+        );
+        if (
+            move.IsValid &&
+            tiles.AreValidCoordinates(move.From) && tiles.AreValidCoordinates(move.To)
+            )
+        {
+            DoMove(move);
+            return false;
+        }
+        return true;
+    }
+
+    void DoMove(Move move)
+    {
+        if (game.TryMove(move))
+        {
+            (
+                tiles[move.From].transform.localPosition,
+                tiles[move.To].transform.localPosition
+            ) = (
+                tiles[move.To].transform.localPosition,
+                tiles[move.From].transform.localPosition
+            );
+            tiles.Swap(move.From, move.To);
+        }
+    }
+
+    float2 ScreenToTileSpace(Vector3 screenPosition)
+    {
+        Ray ray = Camera.main.ScreenPointToRay(screenPosition);
+        Vector3 p = ray.origin - ray.direction * (ray.origin.z / ray.direction.z);
+        return float2(p.x - tileOffset.x + 0.5f, p.y - tileOffset.y + 0.5f);
     }
 }
