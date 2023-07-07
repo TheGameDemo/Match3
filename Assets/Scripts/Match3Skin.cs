@@ -14,6 +14,9 @@ using static Unity.Mathematics.math;
 /// </summary>
 public class Match3Skin : MonoBehaviour
 {
+    [SerializeField]
+    Tile[] tilePrefabs;
+
     public bool IsPlaying => true;
 
     public bool IsBusy => false;
