@@ -1,5 +1,10 @@
 using UnityEngine;
 
+public enum TileState
+{
+    None, A, B, C, D, E, F, G
+}
+
 public class Tile : MonoBehaviour
 {
     PrefabInstancePool<Tile> pool;

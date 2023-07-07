@@ -15,6 +15,13 @@ using static Unity.Mathematics.math;
 public class Match3Skin : MonoBehaviour
 {
     [SerializeField]
+    Match3Game game;
+
+    Grid2D<Tile> tiles;
+
+    float2 tileOffset;
+
+    [SerializeField]
     Tile[] tilePrefabs;
 
     public bool IsPlaying => true;
@@ -23,8 +30,36 @@ public class Match3Skin : MonoBehaviour
 
     public void StartNewGame()
     {
+        game.StartNewGame();
+        tileOffset = -0.5f * (float2)(game.Size - 1);
+        if (tiles.IsUndefined)
+        {
+            tiles = new(game.Size);
+        }
+        else
+        {
+            for (int y = 0; y < tiles.SizeY; y++)
+            {
+                for (int x = 0; x < tiles.SizeX; x++)
+                {
+                    tiles[x, y].Despawn();
+                    tiles[x, y] = null;
+                }
+            }
+        }
 
+
+        for (int y = 0; y < tiles.SizeY; y++)
+        {
+            for (int x = 0; x < tiles.SizeX; x++)
+            {
+                tiles[x, y] = SpawnTile(game[x, y], x, y);
+            }
+        }
     }
+
+    Tile SpawnTile(TileState t, float x, float y) =>
+    tilePrefabs[(int)t - 1].Spawn(new Vector3(x + tileOffset.x, y + tileOffset.y));
 
     public void DoWork()
     {
